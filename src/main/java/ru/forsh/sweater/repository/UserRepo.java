@@ -8,4 +8,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.username = ?1")
     User findByUsername(String userName);
+
+    User findByActivationCode(String code);
 }

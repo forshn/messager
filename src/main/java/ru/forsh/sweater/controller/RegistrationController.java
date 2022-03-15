@@ -1,21 +1,21 @@
 package ru.forsh.sweater.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import ru.forsh.sweater.domain.Role;
 import ru.forsh.sweater.domain.User;
-import ru.forsh.sweater.repository.UserRepo;
+import ru.forsh.sweater.service.UserService;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Controller
 public class RegistrationController {
-    private final UserRepo userRepo;
+    private final UserService userService;
 
-    public RegistrationController(UserRepo userRepo) {
-        this.userRepo = userRepo;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/registration")
@@ -25,17 +25,24 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model) {
-        User userFromDb = userRepo.findByUsername(user.getUsername());
+         if(!userService.addUser(user)){
+             model.put("message", "User exists");
+             return "registration";
+         }
 
-        if (userFromDb != null) {
-            model.put("message", "user exists");
-            return "registration";
+         return "redirect:/login";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate (Model model, @PathVariable String code){
+        boolean isActivated = userService.activateUser(code);
+
+        if(isActivated){
+            model.addAttribute("message", "User sucessfully activated");
+        } else {
+            model.addAttribute("message", "Actiovation code incorrect");
         }
 
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepo.save(user);
-
-        return "redirect:/login";
+        return "login";
     }
 }
