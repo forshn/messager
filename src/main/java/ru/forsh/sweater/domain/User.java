@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.Set;
 
@@ -14,10 +16,21 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @NotBlank(message = "name shouldn't be empty")
     private String username;
+    @NotBlank(message = "password shouldn't be empty")
     private String password;
+
+    // Данная аннотация говорит гибернейту что данное поле не надо
+    // пытаться добавить или извлечь из базы данных
+    @Transient
+    private String password2;
+
     private boolean active;
 
+    @Email(message = "email is no correct")
+    @NotBlank(message = "email can't be empty")
     private String email;
     private String activationCode;
 
@@ -115,5 +128,13 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 }
