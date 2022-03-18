@@ -2,7 +2,6 @@ package ru.forsh.sweater.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -51,7 +50,7 @@ public class RegistrationController {
         String url = String.format(CAPTCHA_URL, secret, captchaResponse);
         CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
 
-        if(!response.isSuccess()){
+        if (!response.isSuccess()) {
             model.addAttribute("captchaError", "fill captcha");
         }
 
