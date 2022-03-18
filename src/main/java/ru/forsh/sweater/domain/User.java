@@ -22,10 +22,9 @@ public class User implements UserDetails {
     @NotBlank(message = "password shouldn't be empty")
     private String password;
 
-    // Данная аннотация говорит гибернейту что данное поле не надо
+    // @Transient Данная аннотация говорит гибернейту что данное поле не надо
     // пытаться добавить или извлечь из базы данных
-    @Transient
-    private String password2;
+
 
     private boolean active;
 
@@ -128,13 +127,5 @@ public class User implements UserDetails {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getPassword2() {
-        return password2;
-    }
-
-    public void setPassword2(String password2) {
-        this.password2 = password2;
     }
 }
